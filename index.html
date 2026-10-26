@@ -54,6 +54,7 @@
 <button class="pill hot" onclick="showTab('tongquan')">📌 Việc cần làm (<span id="taskCount">3</span>)</button>
 <button class="pill hot" onclick="showTab('giaoviec')">📣 Giao việc cho tụi em</button>
 <button class="pill" onclick="showTab('caidat')">⬇ Cài về màn hình</button>
+<button class="pill" onclick="showTab('landing')">🔗 Landing page của chị</button>
 <button class="pill" onclick="toast('Bản v2: mục này ở v3 sẽ nối số lượt dùng thật.')">Tiết kiệm lượt dùng</button>
 <button class="pill" onclick="showTab('bonao')">🧠 Bộ não</button>
 <button class="pill" onclick="toast('Bản mẫu v1: Inbox/comment sẽ gom về đây ở v2, kèm nút dẫn về Zalo.')">Inbox</button>
@@ -67,6 +68,7 @@
 <button class="tab" onclick="showTab('bonao',this)">Bộ não</button>
 <button class="tab" onclick="showTab('giaoviec',this)">Giao việc</button>
 <button class="tab" onclick="showTab('caidat',this)">Cài đặt</button>
+<button class="tab" onclick="showTab('landing',this)">Landing page</button>
 </div>
 
 <div id="tongquan" class="panel active">
@@ -176,6 +178,15 @@
 <div class="card"><h3>Link cài đặt</h3><p>Link cài đặt (mở bằng Safari/Chrome trên điện thoại):<br><a href="https://nangbammo-create.github.io/app-dieu-hanh-nang-ba-mmo/">https://nangbammo-create.github.io/app-dieu-hanh-nang-ba-mmo/</a></p><p class="muted">Bản trên link công khai chỉ dùng dữ liệu minh họa, chưa đưa số thật nhạy cảm lên. GitHub Pages có thể cần vài phút mới hiện bản mới nhất.</p></div>
 </div>
 
+<div id="landing" class="panel">
+<div class="card"><h2>🔗 Landing page của chị</h2><p class="muted">Các link chị hay dùng để dẫn khách. Bấm Mở link để xem, bấm Sao chép để dán vào video, caption hay nhóm Zalo.</p></div>
+<div class="card"><h3>Trang profile Nàng Ba MMO</h3><p class="muted">Trang chính: Tài khoản AI • Tool - App • Hợp Tác - Affiliate.<br>https://nangbammo-create.github.io/profile-nangbammo/</p><a class="btn" href="https://nangbammo-create.github.io/profile-nangbammo/" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Mở link</a> <button class="btn ghost" onclick="saoChepLink('https://nangbammo-create.github.io/profile-nangbammo/')">Sao chép</button></div>
+<div class="card"><h3>Trải Nghiệm App Tạo Video VIP Pro</h3><p class="muted">Trang bán chương trình Trải Nghiệm – Sở Hữu – Hợp Tác Affiliate, link từ 2 thẻ Tool - App và Hợp Tác trên profile.<br>https://nangbammo-create.github.io/app-tao-video-vip-pro/</p><a class="btn" href="https://nangbammo-create.github.io/app-tao-video-vip-pro/" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Mở link</a> <button class="btn ghost" onclick="saoChepLink('https://nangbammo-create.github.io/app-tao-video-vip-pro/')">Sao chép</button></div>
+<div class="card"><h3>Landing Hợp Tác Affiliate (bản test)</h3><p class="muted">Bản test, chưa phải bản công bố chính thức. Giá trải nghiệm 55.000đ, hoa hồng theo bảng đã chốt 25/10.<br>https://nangbammo-create.github.io/hop-tac-affiliate/</p><a class="btn" href="https://nangbammo-create.github.io/hop-tac-affiliate/" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Mở link</a> <button class="btn ghost" onclick="saoChepLink('https://nangbammo-create.github.io/hop-tac-affiliate/')">Sao chép</button></div>
+<div class="card"><h3>Workshop Video Phật Pháp</h3><p class="muted">Lưu ý: trang này vẫn đang hiển thị lịch Zoom đã qua, chị chưa quyết chạy hay gỡ nên em để đây để chị kiểm tra, chưa nên chia sẻ rộng.<br>https://workshoptaovideophatphap-nangbammo-create.vercel.app</p><a class="btn" href="https://workshoptaovideophatphap-nangbammo-create.vercel.app" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Mở link</a> <button class="btn ghost" onclick="saoChepLink('https://workshoptaovideophatphap-nangbammo-create.vercel.app')">Sao chép</button></div>
+<div class="card"><h3>App điều hành này</h3><p class="muted">Link cài đặt của chính app này, để chị gửi cho chính mình hoặc mở trên máy khác.<br>https://nangbammo-create.github.io/app-dieu-hanh-nang-ba-mmo/</p><a class="btn" href="https://nangbammo-create.github.io/app-dieu-hanh-nang-ba-mmo/" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Mở link</a> <button class="btn ghost" onclick="saoChepLink('https://nangbammo-create.github.io/app-dieu-hanh-nang-ba-mmo/')">Sao chép</button></div>
+</div>
+
 <div class="footer">Bản v2 — dữ liệu minh họa theo pipeline thật của Nàng Ba MMO.<br>Chưa đồng bộ live Facebook / YouTube / Zalo. Giao việc chỉ hoàn tất khi chị dán lệnh vào chat với Mộc Miên và gửi.</div>
 </div>
 <div id="toast"></div>
@@ -189,6 +200,7 @@ function soanLenh(){let n=document.getElementById('gvNguoi').value;let v=documen
 function hienList(){try{let list=JSON.parse(localStorage.getItem('nb_gv')||'[]');if(!list.length)return;document.getElementById('gvList').innerHTML=list.map(x=>'<div class="row"><div><b>'+x.v+'</b><br><span class="muted">'+x.n+' • '+x.h+' • '+x.t+'</span></div><span class="badge wait">Chờ dán vào chat</span></div>').join('');}catch(e){}}
 function saoChep(){let t=document.getElementById('gvLenh');if(!t.value){toast('Chị bấm Soạn lệnh trước đã nhé.');return;}if(navigator.clipboard){navigator.clipboard.writeText(t.value).then(()=>toast('Đã sao chép. Chị mở chat với em Mộc Miên, dán và gửi nhé.')).catch(()=>{t.select();document.execCommand('copy');toast('Đã sao chép.');});}else{t.select();document.execCommand('copy');toast('Đã sao chép.');}}
 function kiemTraCai(){let standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;document.getElementById('caiKq').textContent=standalone?'App này đang chạy ở chế độ đã cài về màn hình.':'Chưa ở chế độ đã cài. Chị mở link https bằng Safari/Chrome rồi làm theo hướng dẫn ở trên nhé.';}
+function saoChepLink(url){if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>toast('Đã sao chép link.')).catch(()=>toast(url));}else{toast(url);}}
 try{hienList();}catch(e){}
 if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}
 </script>
