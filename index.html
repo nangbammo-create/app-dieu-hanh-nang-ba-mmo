@@ -3,96 +3,112 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nàng Ba MMO — App Điều Hành Ê-kíp AI (Bản v2)</title>
+<title>Nàng Ba MMO — App Điều Hành Ê-kíp AI</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#2563eb">
+<meta name="theme-color" content="#0f766e">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Nàng Ba MMO">
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
-*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#e9eef7;color:#16233a}
-.app{max-width:540px;margin:0 auto;background:#f6f8fc;min-height:100vh;padding-bottom:90px;border-left:5px solid transparent;border-right:5px solid transparent;border-image:linear-gradient(90deg,#2563eb,#fff) 1}
-.topbar{background:#0a8a5a;color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:700}
-.topbar span:last-child{background:#fff;color:#0a8a5a;padding:5px 10px;border-radius:20px;font-size:13px}
-.header{padding:16px;background:linear-gradient(135deg,#2563eb,#06b6d4);color:#fff}
-.header h1{margin:0;font-size:24px} .header h1 i{font-style:normal;background:linear-gradient(90deg,#fff,#fde68a,#fb923c);-webkit-background-clip:text;background-clip:text;color:transparent}
-.header p{margin:6px 0 0;opacity:.95;font-size:14px}
-.pills{display:flex;gap:8px;flex-wrap:wrap;padding:12px 14px}
-.pill{border:1px solid #dbe4f2;background:#fff;padding:7px 11px;border-radius:20px;font-size:13px;cursor:pointer}
-.pill.hot{background:#ffedd5;border-color:#fdba74;font-weight:700}
-.tabs{display:flex;gap:6px;padding:0 14px;overflow-x:auto}
-.tab{white-space:nowrap;border:0;background:#e2e8f0;padding:9px 13px;border-radius:12px 12px 0 0;font-weight:700;cursor:pointer}
-.tab.active{background:#fff;color:#1d4ed8;box-shadow:0 -2px 8px rgba(0,0,0,.06)}
-.panel{display:none;padding:14px} .panel.active{display:block}
-.card{background:#fff;border-radius:18px;padding:15px;margin-bottom:12px;box-shadow:0 4px 18px rgba(15,40,90,.07)}
-.card h2{margin:0 0 6px;font-size:17px} .card h3{margin:0 0 6px;font-size:15px} .muted{color:#64748b;font-size:13px;line-height:1.5}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.stat{background:#fff;border-radius:16px;padding:13px;box-shadow:0 3px 12px rgba(0,0,0,.05)} .stat b{font-size:24px;color:#1d4ed8} .stat span{display:block;color:#64748b;font-size:12px;margin-top:2px}
-.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px dashed #e2e8f0}
-.row:first-of-type{border-top:0} .badge{font-size:12px;font-weight:700;padding:4px 9px;border-radius:20px;white-space:nowrap}
-.ok{background:#dcfce7;color:#166534} .wait{background:#fef3c7;color:#92400e} .run{background:#dbeafe;color:#1e40af}
-.btn{border:0;border-radius:12px;padding:9px 14px;font-weight:800;cursor:pointer;background:#1d4ed8;color:#fff}
-.btn.ghost{background:#eef2ff;color:#1d4ed8} .btn.done{background:#e2e8f0;color:#64748b}
-.agent{border:2px solid #dbeafe;border-radius:16px;padding:12px;margin-bottom:10px;cursor:pointer;background:#fff}
-.agent.active{border-color:#2563eb;box-shadow:0 0 0 3px #dbeafe}
-.agent b{font-size:15px} .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#22c55e;margin-right:6px}
+:root{--accent:#0f766e;--accent2:#0a8a5a}
+*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#eef2f0;color:#16233a}
+body.dark{background:#0f172a;color:#e2e8f0} body.dark .card,body.dark .stat{ background:#1e293b;color:#e2e8f0;border-color:#334155} body.dark .topbar{background:#0f2e2a}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:264px;background:#0e1f1a;color:#d1fae5;flex-shrink:0;padding:14px 12px;position:sticky;top:0;height:100vh;overflow:auto}
+.logo{font-size:20px;font-weight:900;color:#fff;line-height:1.2} .logo small{display:block;font-size:11px;letter-spacing:2px;color:#6ee7b7}
+.side-group{font-size:11px;letter-spacing:1.5px;color:#6ee7b7;margin:18px 8px 6px;font-weight:800}
+.side-link{display:block;width:100%;text-align:left;background:transparent;border:0;color:#d1fae5;padding:10px 12px;border-radius:12px;font-size:14px;cursor:pointer}
+.side-link:hover,.side-link.active{background:var(--accent);color:#fff;font-weight:700}
+.side-link .badge{float:right;background:#f59e0b;color:#000;font-size:11px;font-weight:800;padding:2px 7px;border-radius:12px}
+.main{flex:1;min-width:0}
+.topbar{background:var(--accent);color:#fff;padding:12px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;position:sticky;top:0;z-index:20}
+.topbar input{flex:1;min-width:180px;padding:10px 14px;border-radius:20px;border:0;font-size:14px}
+.topbar .pillbtn{background:#fff;color:#0f766e;border:0;padding:9px 13px;border-radius:20px;font-weight:800;cursor:pointer;white-space:nowrap}
+.topbar .sos{background:#fef3c7;color:#92400e;padding:8px 11px;border-radius:20px;font-weight:800;font-size:13px}
+.burger{display:none;background:#fff;color:#0f766e;border:0;padding:9px 12px;border-radius:10px;font-weight:900;cursor:pointer}
+.content{padding:18px;max-width:1100px}
+h1{margin:0 0 4px;font-size:26px} h2{margin:0 0 8px;font-size:18px} h3{margin:0 0 6px;font-size:15px} .muted{color:#64748b;font-size:13px;line-height:1.55} body.dark .muted{color:#94a3b8}
+.panel{display:none} .panel.active{display:block}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.stat{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:14px} .stat b{font-size:28px} .stat span{display:block;color:#64748b;font-size:12px;margin-top:3px}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px;margin-bottom:14px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-top:1px dashed #e2e8f0} .row:first-of-type{border-top:0}
+.badge{font-size:12px;font-weight:800;padding:4px 9px;border-radius:20px;white-space:nowrap} .ok{background:#dcfce7;color:#166534} .wait{background:#fef3c7;color:#92400e} .run{background:#dbeafe;color:#1e40af}
+.btn{border:0;border-radius:12px;padding:10px 15px;font-weight:800;cursor:pointer;background:var(--accent);color:#fff;text-decoration:none;display:inline-block} .btn.ghost{background:#eef2ff;color:#1d4ed8} .btn.done{background:#e2e8f0;color:#64748b}
+.agent{border:2px solid #dbeafe;border-radius:16px;padding:12px;margin-bottom:10px;cursor:pointer;background:#fff} body.dark .agent{background:#1e293b;border-color:#334155} .agent.active{border-color:var(--accent);box-shadow:0 0 0 3px #ccfbf1}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#22c55e;margin-right:6px}
+.kho{display:grid;grid-template-columns:repeat(4,1fr);gap:10px} .kho div{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:12px} body.dark .kho div{background:#0f172a;border-color:#334155} .kho b{display:block}
 .funnel div{border-radius:14px;padding:12px;margin-bottom:8px;color:#fff;font-weight:700;text-align:center}
 .funnel div:nth-child(1){background:#2563eb}.funnel div:nth-child(2){background:#0891b2}.funnel div:nth-child(3){background:#0a8a5a}.funnel div:nth-child(4){background:#7c3aed}.funnel div:nth-child(5){background:#ea580c}
 .funnel small{display:block;font-weight:400;opacity:.9;margin-top:3px}
-.kho{display:grid;grid-template-columns:1fr 1fr;gap:10px} .kho div{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:11px} .kho b{display:block}
+select,input,textarea{width:100%;padding:11px;border-radius:12px;border:1px solid #dbe4f2;margin:6px 0 10px;font-size:15px;font-family:inherit}
+.themes{display:flex;gap:8px;flex-wrap:wrap} .theme{width:56px;height:36px;border-radius:10px;border:3px solid transparent;cursor:pointer} .theme.active{border-color:#000}
 #toast{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;background:#16233a;color:#fff;padding:11px 16px;border-radius:20px;font-size:14px;display:none;z-index:99;max-width:90%;text-align:center}
-.footer{padding:14px;text-align:center;color:#64748b;font-size:12px;line-height:1.5}
+@media(max-width:820px){.sidebar{position:fixed;left:0;top:0;z-index:50;transform:translateX(-105%);transition:.2s}.sidebar.open{transform:none}.burger{display:inline-block}.stats{grid-template-columns:1fr 1fr}.kho{grid-template-columns:1fr 1fr}.content{padding:14px}}
 </style>
 </head>
 <body>
-<div class="app">
-<div class="topbar"><span>✓ Không có việc gấp, đội agent đang tự chạy</span><span>SOS (0)</span></div>
-<div class="header"><h1>🌺 <i>NÀNG BA MMO</i></h1><p>App điều hành ê-kíp AI — Chị Đại chỉ cần mở ra là thấy hết.<br><b>Bản v2</b> • Cài được về điện thoại • Giao việc qua chat.</p></div>
-<div class="pills">
-<button class="pill hot" onclick="showTab('tongquan')">📌 Việc cần làm (<span id="taskCount">3</span>)</button>
-<button class="pill hot" onclick="showTab('giaoviec')">📣 Giao việc cho tụi em</button>
-<button class="pill" onclick="showTab('caidat')">⬇ Cài về màn hình</button>
-<button class="pill" onclick="showTab('landing')">🔗 Landing page của chị</button>
-<button class="pill" onclick="toast('Bản v2: mục này ở v3 sẽ nối số lượt dùng thật.')">Tiết kiệm lượt dùng</button>
-<button class="pill" onclick="showTab('bonao')">🧠 Bộ não</button>
-<button class="pill" onclick="toast('Bản mẫu v1: Inbox/comment sẽ gom về đây ở v2, kèm nút dẫn về Zalo.')">Inbox</button>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<div class="logo">🌺 NÀNG BA MMO<small>ĐIỀU HÀNH Ê-KÍP AI</small></div>
+<div class="side-group">TỔNG QUAN</div>
+<button class="side-link active" onclick="showTab('tongquan',this)">📊 Bảng điều khiển</button>
+<button class="side-link" onclick="showTab('tongquan',this)">📌 Việc hôm nay <span class="badge" id="taskCount2">3</span></button>
+<button class="side-link" onclick="showTab('giaoviec',this)">📣 Giao việc nhanh</button>
+<div class="side-group">AGENT &amp; SUB AGENT</div>
+<button class="side-link" onclick="showTab('sodo',this)">🧠 Mộc Miên — Tổng quản</button>
+<button class="side-link" onclick="showTab('sodo',this)">🎬 Nàng Mộc — Media</button>
+<button class="side-link" onclick="showTab('sodo',this)">📘 Á Hiên FB</button>
+<button class="side-link" onclick="showTab('sodo',this)">🎵 Á Hiên TikTok</button>
+<button class="side-link" onclick="showTab('sodo',this)">▶️ Á Hiên YTB</button>
+<button class="side-link" onclick="showTab('sodo',this)">🤖 Tiểu Kỳ — Video Agent</button>
+<div class="side-group">KÊNH &amp; NỘI DUNG</div>
+<button class="side-link" onclick="showTab('lich',this)">🗓️ Lịch đăng</button>
+<button class="side-link" onclick="showTab('kho',this)">🗂️ Kho video &amp; ảnh</button>
+<button class="side-link" onclick="showTab('kho',this)">📝 Kịch bản &amp; thumbnail</button>
+<div class="side-group">PHỄU &amp; DOANH THU</div>
+<button class="side-link" onclick="showTab('pheu',this)">💰 Phễu doanh thu</button>
+<button class="side-link" onclick="showTab('landing',this)">🔗 Landing page</button>
+<div class="side-group">HỆ THỐNG</div>
+<button class="side-link" onclick="showTab('caidat',this)">⚙️ Cài đặt &amp; giao diện</button>
+<button class="side-link" onclick="showTab('bonao',this)">🧠 Bộ não — Quy chuẩn</button>
+<button class="side-link" onclick="showTab('caidat',this)">❓ Hướng dẫn cài app</button>
+<div style="margin-top:22px;padding:12px;background:#1f2f28;border-radius:14px"><b style="color:#fff">Chị Đại</b><br><span style="font-size:12px;color:#a7f3d0">Quản lý ê-kíp • 26/10/2026</span><br><span style="font-size:12px">✓ Không có việc gấp, đội agent đang tự chạy</span></div>
+</aside>
+<main class="main">
+<div class="topbar">
+<button class="burger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+<input id="searchBox" placeholder="Tìm agent, việc, video, landing page..." onkeydown="if(event.key==='Enter')searchJump()">
+<button class="pillbtn" onclick="showTab('giaoviec')">＋ Giao việc nhanh</button>
+<span class="sos">SOS (0)</span>
+<span>Ê-kíp Nàng Ba MMO</span>
 </div>
-<div class="tabs">
-<button class="tab active" onclick="showTab('tongquan',this)">Tổng quan</button>
-<button class="tab" onclick="showTab('sodo',this)">Sơ đồ chỉ huy</button>
-<button class="tab" onclick="showTab('kho',this)">Kho</button>
-<button class="tab" onclick="showTab('lich',this)">Lịch đăng</button>
-<button class="tab" onclick="showTab('pheu',this)">Phễu doanh thu</button>
-<button class="tab" onclick="showTab('bonao',this)">Bộ não</button>
-<button class="tab" onclick="showTab('giaoviec',this)">Giao việc</button>
-<button class="tab" onclick="showTab('caidat',this)">Cài đặt</button>
-<button class="tab" onclick="showTab('landing',this)">Landing page</button>
-</div>
-
+<div class="content">
 <div id="tongquan" class="panel active">
-<div class="card"><h2>Vòng hệ sinh thái Nàng Ba MMO</h2><p class="muted">Các agent và kênh trong một vòng: nội dung → kênh → nhóm Zalo → trial → membership. Không bán ở đầu phễu, chỉ bán sau khi đã cho giá trị.</p></div>
+<h1>Bảng điều khiển</h1><p class="muted">Tổng quan hoạt động ê-kíp Nàng Ba MMO. Các agent và kênh trong một vòng: nội dung → kênh → nhóm Zalo → trial → membership.</p>
 <div class="stats">
-<div class="stat"><b>6</b><span>video / ngày, làm gối đầu<br>không chờ gói sáng</span></div>
-<div class="stat"><b>9</b><span>lượt đăng / ngày<br>3 video × 3 kênh</span></div>
-<div class="stat"><b>1</b><span>nhóm Zalo duy nhất<br>Hỗ trợ Ứng dụng AI - Tài khoản AI</span></div>
-<div class="stat"><b>3</b><span>ca đăng: 8h00 • 11h30 • 19h30</span></div>
+<div class="stat"><b>3</b><span>Việc hôm nay chờ chị duyệt</span></div>
+<div class="stat"><b>6</b><span>Video / ngày, làm gối đầu</span></div>
+<div class="stat"><b>9</b><span>Lượt đăng / ngày: 3 video × 3 kênh</span></div>
+<div class="stat"><b>1</b><span>Nhóm Zalo duy nhất: Hỗ trợ Ứng dụng AI - Tài khoản AI</span></div>
 </div>
 <div class="card"><h2>📌 Việc cần chị Đại duyệt</h2>
 <div class="row"><div><b>Duyệt gói đăng sáng nay</b><br><span class="muted">Video + caption + thumbnail, đủ 3 kênh</span></div><button class="btn" onclick="approve(this)">Duyệt</button></div>
 <div class="row"><div><b>Bấm thẻ phê duyệt Facebook</b><br><span class="muted">Thẻ này chỉ chị bấm được, agent không bấm thay</span></div><button class="btn" onclick="approve(this)">Đã bấm</button></div>
 <div class="row"><div><b>Chốt video Tiểu Kỳ Bài 2</b><br><span class="muted">Duyệt 1 lần rồi chạy hàng loạt</span></div><button class="btn" onclick="approve(this)">Duyệt</button></div>
-<p class="muted">Bấm Duyệt ở bản mẫu chỉ đổi số trong trang này, chưa đăng thật.</p></div>
+<p class="muted">Bấm Duyệt ở đây chỉ đổi số trong trang này, chưa đăng thật.</p></div>
 <div class="card"><h2>📣 Bài đã đăng • hôm nay</h2>
 <div class="row"><span>Ca 8h00 — Facebook + TikTok + YouTube</span><span class="badge ok">Đã lên lịch</span></div>
 <div class="row"><span>Ca 11h30 — đang chờ gói video</span><span class="badge wait">Chờ video</span></div>
 <div class="row"><span>Ca 19h30 — lên lịch trước 1 ngày (Meta Suite)</span><span class="badge run">Đã cài lịch</span></div>
 <p class="muted">Comment đăng sau khi bài lên sóng, dưới danh tính Trang Nàng Ba MMO. Ca nào kẹt quá 10 phút phải báo ngay.</p></div>
+<div class="card"><h2>⚠️ Cần chú ý</h2>
+<p class="muted">• Chống trùng hiện chỉ phát hiện bài ĐÃ ĐĂNG, không thấy bài ĐÃ LÊN LỊCH trên Meta Suite — trước khi đăng tay phải kiểm tra lịch Suite trước để tránh đăng trùng. Chờ chị chốt tắt hẳn hay giữ kèm bước kiểm tra này.<br>• Ca nào quá 1 tiếng sau mốc đăng mà chưa có báo cáo thì coi là kẹt — kiểm tra Page trực tiếp, không chờ tới timeout.<br>• Không bán ở đầu phễu, chỉ bán sau khi đã cho giá trị.</p></div>
 </div>
 
 <div id="sodo" class="panel">
-<div class="card"><h2>Sơ đồ chỉ huy — hôm nay</h2><p class="muted">Bấm vào từng người để xem việc đang làm. Người ở trên ra lệnh, người ở dưới làm và báo về.</p></div>
+<h1>Sơ đồ chỉ huy — hôm nay</h1><p class="muted">Bấm vào từng người để xem việc đang làm. Người ở trên ra lệnh, người ở dưới làm và báo về.</p>
 <div class="agent active" onclick="agentDetail('Mộc Miên — Tổng quản','Gom báo cáo 3 kênh, QC thành phẩm, báo cáo hợp nhất cho chị Đại sau mỗi ca 30 phút. Kẹt là báo ngay, không im lặng.',this)"><span class="dot"></span><b>Mộc Miên — Tổng quản</b><br><span class="muted">Ra lệnh • Duyệt nội dung • QC • Báo cáo</span></div>
 <div class="agent" onclick="agentDetail('Nàng Mộc — Media','Làm 6 video/ngày gối đầu: ảnh Ba → clip làm việc → video THCN khung V5, không nhạc sẵn. Giao gói đăng sẵn trước 7h00.',this)"><span class="dot"></span><b>Nàng Mộc — Media</b><br><span class="muted">Ảnh • Clip • Video THCN • Gói đăng sẵn</span></div>
 <div class="agent" onclick="agentDetail('Á Hiên FB — Facebook','Đăng Page Nàng Ba MMO, chèn nhạc Power Trip, ảnh bìa đủ tiêu đề, 6 comment dưới danh tính Trang.',this)"><span class="dot"></span><b>Á Hiên FB — Facebook</b><br><span class="muted">Page • Reel • Comment • Lên lịch trước 1 ngày</span></div>
@@ -103,7 +119,7 @@
 </div>
 
 <div id="kho" class="panel">
-<div class="card"><h2>Kho của chị Đại</h2><p class="muted">Mọi nguyên liệu nằm một chỗ, không phải đi tìm trong từng chat, từng Drive.</p></div>
+<h1>Kho của chị Đại</h1><p class="muted">Mọi nguyên liệu nằm một chỗ, không phải đi tìm trong từng chat, từng Drive.</p>
 <div class="kho">
 <div><b>🖼️ Kho bối cảnh</b><span class="muted">34 cảnh làm việc chân thực</span></div>
 <div><b>👩 Kho ảnh Ba</b><span class="muted">Mặt gốc 100% • Thả tóc • ASUS bạc</span></div>
@@ -114,20 +130,21 @@
 <div><b>🖼️ Thumbnail v8</b><span class="muted">Ảnh gốc bên phải • Đủ tiêu đề</span></div>
 <div><b>🧩 Kho skill</b><span class="muted">Skill/app dùng lại được</span></div>
 </div>
-<div class="card"><p class="muted">Bản mẫu v1 liệt kê kho. Ở v2, mỗi ô sẽ mở đúng folder Drive tương ứng của chị.</p><button class="btn ghost" onclick="toast('Bản mẫu v1: v2 sẽ gắn link Drive thật vào từng ô kho.')">Xem ghi chú v2</button></div>
+<div class="card"><p class="muted">Bản này liệt kê kho. Ở bản sau, mỗi ô sẽ mở đúng folder Drive tương ứng của chị.</p><button class="btn ghost" onclick="toast('Bản này: bản sau sẽ gắn link Drive thật vào từng ô kho.')">Xem ghi chú bản sau</button></div>
 </div>
 
 <div id="lich" class="panel">
-<div class="card"><h2>Lịch đăng chuẩn</h2>
+<h1>Lịch đăng chuẩn</h1>
+<div class="card">
 <div class="row"><span><b>8h00</b> — Ca sáng</span><span class="badge ok">Đã lên lịch</span></div>
 <div class="row"><span><b>11h30</b> — Ca trưa</span><span class="badge wait">Chờ video</span></div>
 <div class="row"><span><b>19h30</b> — Ca tối</span><span class="badge run">Đã cài lịch mai</span></div>
-<p class="muted">Á Hiên FB lên lịch trước 1 ngày trên Meta Business Suite. Lịch đăng tay 07:55 / 11:25 / 19:25 chỉ giữ làm dự phòng — LƯU Ý: chống trùng hiện chỉ phát hiện bài ĐÃ ĐĂNG, không thấy bài ĐÃ LÊN LỊCH trên Suite, nên trước khi đăng tay phải kiểm tra lịch Suite trước để tránh đăng trùng. Chờ chị chốt tắt hẳn hay giữ kèm bước kiểm tra này.</p></div>
+<p class="muted">Á Hiên FB lên lịch trước 1 ngày trên Meta Business Suite. Lịch đăng tay 07:55 / 11:25 / 19:25 chỉ giữ làm dự phòng — LƯU Ý: chống trùng hiện chỉ phát hiện bài ĐÃ ĐĂNG, không thấy bài ĐÃ LÊN LỊCH trên Suite, nên trước khi đăng tay phải kiểm tra lịch Suite trước.</p></div>
 <div class="card"><h3>Quy tắc chống im lặng</h3><p class="muted">Ca nào quá 1 tiếng sau mốc đăng mà chưa có báo cáo thì coi là kẹt — kiểm tra Page trực tiếp và xử lý, không chờ tới timeout.</p></div>
 </div>
 
 <div id="pheu" class="panel">
-<div class="card"><h2>Phễu doanh thu — vòng quay khép kín</h2><p class="muted">Content kéo người mới → trial → xài app → mua tài khoản → ở lại member → khoe kết quả → thành content mới.</p></div>
+<h1>Phễu doanh thu — vòng quay khép kín</h1><p class="muted">Content kéo người mới → trial → xài app → mua tài khoản → ở lại member → khoe kết quả → thành content mới.</p>
 <div class="funnel">
 <div>1. Video miễn phí<small>Cho giá trị thật, không bán trên video</small></div>
 <div>2. Nhóm Zalo duy nhất<small>Hỗ trợ Ứng dụng AI - Tài khoản AI</small></div>
@@ -139,68 +156,76 @@
 </div>
 
 <div id="bonao" class="panel">
-<div class="card"><h2>🧠 Bộ não — quy chuẩn đã khóa</h2>
-<p class="muted">• Mặt Ba giữ 100% nguyên gốc, edit trên ảnh gốc, không regenerate lại mặt.<br>• Phong cách street life cá tính, trang phục luân phiên, không đồ công sở, không sơ vin, không váy bánh bèo.<br>• Giày cao gót bít mũi bít gót hoặc boot. Laptop ASUS màu bạc.<br>• Video THCN khung V5: khung mờ 448px, y 712–1160, đáy cách đáy khung hình 120px.<br>• Thành phẩm không nhạc sẵn. Facebook Reel chèn Power Trip của Adam Griffith. Tắt phụ đề nền tảng.<br>• Ảnh bìa Reel phải đủ tiêu đề, lấy frame lúc chữ đã gõ xong (khoảng giây 8.5).<br>• Tiểu Kỳ: bắt buộc chèn thành phẩm thật, chữ chạy đúng lúc lời thoại, cấm chân chữ và câu “xem tiếp”.</p></div>
+<h1>🧠 Bộ não — quy chuẩn đã khóa</h1>
+<div class="card"><p class="muted">• Mặt Ba giữ 100% nguyên gốc, edit trên ảnh gốc, không regenerate lại mặt.<br>• Phong cách street life cá tính, trang phục luân phiên, không đồ công sở, không sơ vin, không váy bánh bèo.<br>• Giày cao gót bít mũi bít gót hoặc boot. Laptop ASUS màu bạc.<br>• Video THCN khung V5: khung mờ 448px, y 712–1160, đáy cách đáy khung hình 120px.<br>• Thành phẩm không nhạc sẵn. Facebook Reel chèn Power Trip của Adam Griffith. Tắt phụ đề nền tảng.<br>• Ảnh bìa Reel phải đủ tiêu đề, lấy frame lúc chữ đã gõ xong (khoảng giây 8.5).<br>• Tiểu Kỳ: bắt buộc chèn thành phẩm thật, chữ chạy đúng lúc lời thoại, cấm chân chữ và câu “xem tiếp”.</p></div>
 </div>
 
 <div id="giaoviec" class="panel">
-<div class="card"><h2>📣 Giao việc cho tụi em</h2><p class="muted">Chị chọn người, gõ việc, app soạn sẵn lệnh đúng mẫu. Sau đó chị sao chép, mở chat với em Mộc Miên, dán và gửi — lúc đó em mới nhận được và chia việc cho người đó.</p>
+<h1>📣 Giao việc cho tụi em</h1>
+<div class="card"><p class="muted">Chị chọn người, gõ việc, app soạn sẵn lệnh đúng mẫu. Sau đó chị sao chép, mở chat với em Mộc Miên, dán và gửi — lúc đó em mới nhận được và chia việc cho người đó.</p>
 <label class="muted">Giao cho ai?</label>
-<select id="gvNguoi" style="width:100%;padding:11px;border-radius:12px;border:1px solid #dbe4f2;margin:6px 0 10px;font-size:15px">
-<option>Mộc Miên — Tổng quản (em sẽ chia việc tiếp)</option>
-<option>Nàng Mộc — Media (ảnh, clip, video THCN)</option>
-<option>Á Hiên FB — Facebook</option>
-<option>Á Hiên TikTok — TikTok</option>
-<option>Á Hiên YTB — YouTube</option>
-<option>Tiểu Kỳ — Video Agent</option>
-</select>
+<select id="gvNguoi"><option>Mộc Miên — Tổng quản (em sẽ chia việc tiếp)</option><option>Nàng Mộc — Media (ảnh, clip, video THCN)</option><option>Á Hiên FB — Facebook</option><option>Á Hiên TikTok — TikTok</option><option>Á Hiên YTB — YouTube</option><option>Tiểu Kỳ — Video Agent</option></select>
 <label class="muted">Việc cần làm là gì?</label>
-<input id="gvViec" placeholder="Ví dụ: Làm 6 video gối đầu cho ngày mai" style="width:100%;padding:11px;border-radius:12px;border:1px solid #dbe4f2;margin:6px 0 10px;font-size:15px">
+<input id="gvViec" placeholder="Ví dụ: Làm 6 video gối đầu cho ngày mai">
 <label class="muted">Hạn / ca nào?</label>
-<select id="gvHan" style="width:100%;padding:11px;border-radius:12px;border:1px solid #dbe4f2;margin:6px 0 10px;font-size:15px">
-<option>Hôm nay, trước 19h30</option><option>Ngày mai, trước 7h00</option><option>Ca 8h00</option><option>Ca 11h30</option><option>Ca 19h30</option><option>Không gấp, làm trong tuần này</option>
-</select>
+<select id="gvHan"><option>Hôm nay, trước 19h30</option><option>Ngày mai, trước 7h00</option><option>Ca 8h00</option><option>Ca 11h30</option><option>Ca 19h30</option><option>Không gấp, làm trong tuần này</option></select>
 <label class="muted">Ghi chú thêm (không bắt buộc)</label>
-<textarea id="gvGhiChu" rows="2" placeholder="Ví dụ: Nhớ lấy bản không nhạc, thumbnail đủ tiêu đề" style="width:100%;padding:11px;border-radius:12px;border:1px solid #dbe4f2;margin:6px 0 10px;font-size:15px"></textarea>
+<textarea id="gvGhiChu" rows="2" placeholder="Ví dụ: Nhớ lấy bản không nhạc, thumbnail đủ tiêu đề"></textarea>
 <button class="btn" onclick="soanLenh()">Soạn lệnh</button>
-<button class="btn ghost" onclick="saoChep()">Sao chép lệnh</button>
-</div>
-<div class="card"><h3>Lệnh sẽ gửi qua chat</h3><textarea id="gvLenh" rows="5" readonly placeholder="Bấm Soạn lệnh, lệnh sẽ hiện ở đây." style="width:100%;padding:11px;border-radius:12px;border:1px solid #dbe4f2;font-size:14px"></textarea>
+<button class="btn ghost" onclick="saoChep()">Sao chép lệnh</button></div>
+<div class="card"><h3>Lệnh sẽ gửi qua chat</h3><textarea id="gvLenh" rows="5" readonly placeholder="Bấm Soạn lệnh, lệnh sẽ hiện ở đây."></textarea>
 <p class="muted">Bước cuối quan trọng: sau khi sao chép, chị mở chat với em Mộc Miên, dán lệnh và bấm gửi. Chưa gửi qua chat thì tụi em chưa thấy việc này đâu ạ.</p></div>
 <div class="card"><h3>Việc chị vừa soạn (chỉ lưu trên máy này)</h3><div id="gvList"><p class="muted">Chưa có việc nào. Việc ở đây chưa gửi cho tụi em cho tới khi chị dán vào chat và gửi.</p></div></div>
 </div>
 
-<div id="caidat" class="panel">
-<div class="card"><h2>⬇ Cài về màn hình điện thoại</h2><p class="muted">Bản v2 đã có manifest và icon để cài như app. Lưu ý: phải mở bằng <b>link https</b> trên trình duyệt thật, mở file đính kèm trong chat thì trình duyệt không cho cài.</p>
-<p><b>Android (Chrome):</b> Mở link → dấu ⋮ → Thêm vào Màn hình chính → Thêm.<br><br><b>iPhone (Safari):</b> Mở link bằng Safari → nút Chia sẻ → Thêm vào Màn hình chính → Thêm.<br><br><b>Không mở trong Zalo:</b> Zalo chặn nhiều tính năng, chị bấm ⋯ → Mở bằng trình duyệt rồi mới cài.</p>
-<button class="btn ghost" onclick="kiemTraCai()">Kiểm tra xem đã cài chưa</button>
-<p class="muted" id="caiKq"></p></div>
-<div class="card"><h3>Link cài đặt</h3><p>Link cài đặt (mở bằng Safari/Chrome trên điện thoại):<br><a href="https://nangbammo-create.github.io/app-dieu-hanh-nang-ba-mmo/">https://nangbammo-create.github.io/app-dieu-hanh-nang-ba-mmo/</a></p><p class="muted">Bản trên link công khai chỉ dùng dữ liệu minh họa, chưa đưa số thật nhạy cảm lên. GitHub Pages có thể cần vài phút mới hiện bản mới nhất.</p></div>
-</div>
-
 <div id="landing" class="panel">
-<div class="card"><h2>🔗 Landing page của chị</h2><p class="muted">Các link chị hay dùng để dẫn khách. Bấm Mở link để xem, bấm Sao chép để dán vào video, caption hay nhóm Zalo.</p></div>
-<div class="card"><h3>Trang profile Nàng Ba MMO</h3><p class="muted">Trang chính: Tài khoản AI • Tool - App • Hợp Tác - Affiliate.<br>https://nangbammo-create.github.io/profile-nangbammo/</p><a class="btn" href="https://nangbammo-create.github.io/profile-nangbammo/" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Mở link</a> <button class="btn ghost" onclick="saoChepLink('https://nangbammo-create.github.io/profile-nangbammo/')">Sao chép</button></div>
-<div class="card"><h3>Trải Nghiệm App Tạo Video VIP Pro</h3><p class="muted">Trang bán chương trình Trải Nghiệm – Sở Hữu – Hợp Tác Affiliate, link từ 2 thẻ Tool - App và Hợp Tác trên profile.<br>https://nangbammo-create.github.io/app-tao-video-vip-pro/</p><a class="btn" href="https://nangbammo-create.github.io/app-tao-video-vip-pro/" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Mở link</a> <button class="btn ghost" onclick="saoChepLink('https://nangbammo-create.github.io/app-tao-video-vip-pro/')">Sao chép</button></div>
-<div class="card"><h3>Landing Hợp Tác Affiliate (bản test)</h3><p class="muted">Bản test, chưa phải bản công bố chính thức. Giá trải nghiệm 55.000đ, hoa hồng theo bảng đã chốt 25/10.<br>https://nangbammo-create.github.io/hop-tac-affiliate/</p><a class="btn" href="https://nangbammo-create.github.io/hop-tac-affiliate/" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Mở link</a> <button class="btn ghost" onclick="saoChepLink('https://nangbammo-create.github.io/hop-tac-affiliate/')">Sao chép</button></div>
-<div class="card"><h3>Workshop Video Phật Pháp</h3><p class="muted">Lưu ý: trang này vẫn đang hiển thị lịch Zoom đã qua, chị chưa quyết chạy hay gỡ nên em để đây để chị kiểm tra, chưa nên chia sẻ rộng.<br>https://workshoptaovideophatphap-nangbammo-create.vercel.app</p><a class="btn" href="https://workshoptaovideophatphap-nangbammo-create.vercel.app" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Mở link</a> <button class="btn ghost" onclick="saoChepLink('https://workshoptaovideophatphap-nangbammo-create.vercel.app')">Sao chép</button></div>
-<div class="card"><h3>App điều hành này</h3><p class="muted">Link cài đặt của chính app này, để chị gửi cho chính mình hoặc mở trên máy khác.<br>https://nangbammo-create.github.io/app-dieu-hanh-nang-ba-mmo/</p><a class="btn" href="https://nangbammo-create.github.io/app-dieu-hanh-nang-ba-mmo/" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Mở link</a> <button class="btn ghost" onclick="saoChepLink('https://nangbammo-create.github.io/app-dieu-hanh-nang-ba-mmo/')">Sao chép</button></div>
+<h1>🔗 Landing page của chị</h1><p class="muted">Các link chị hay dùng để dẫn khách. Bấm Mở link để xem, bấm Sao chép để dán vào video, caption hay nhóm Zalo.</p>
+<div class="card"><h3>Trang profile Nàng Ba MMO</h3><p class="muted">Trang chính: Tài khoản AI • Tool - App • Hợp Tác - Affiliate.<br>https://nangbammo-create.github.io/profile-nangbammo/</p><a class="btn" href="https://nangbammo-create.github.io/profile-nangbammo/" target="_blank" rel="noopener">Mở link</a> <button class="btn ghost" onclick="saoChepLink('https://nangbammo-create.github.io/profile-nangbammo/')">Sao chép</button></div>
+<div class="card"><h3>Trải Nghiệm App Tạo Video VIP Pro</h3><p class="muted">Trang bán chương trình Trải Nghiệm – Sở Hữu – Hợp Tác Affiliate.<br>https://nangbammo-create.github.io/app-tao-video-vip-pro/</p><a class="btn" href="https://nangbammo-create.github.io/app-tao-video-vip-pro/" target="_blank" rel="noopener">Mở link</a> <button class="btn ghost" onclick="saoChepLink('https://nangbammo-create.github.io/app-tao-video-vip-pro/')">Sao chép</button></div>
+<div class="card"><h3>Landing Hợp Tác Affiliate (bản test)</h3><p class="muted">Bản test, chưa phải bản công bố chính thức. Giá trải nghiệm 55.000đ, hoa hồng theo bảng đã chốt 25/10.<br>https://nangbammo-create.github.io/hop-tac-affiliate/</p><a class="btn" href="https://nangbammo-create.github.io/hop-tac-affiliate/" target="_blank" rel="noopener">Mở link</a> <button class="btn ghost" onclick="saoChepLink('https://nangbammo-create.github.io/hop-tac-affiliate/')">Sao chép</button></div>
+<div class="card"><h3>App điều hành này</h3><p class="muted">Link cài đặt của chính app này.<br>https://nangbammo-create.github.io/app-dieu-hanh-nang-ba-mmo/</p><a class="btn" href="https://nangbammo-create.github.io/app-dieu-hanh-nang-ba-mmo/" target="_blank" rel="noopener">Mở link</a> <button class="btn ghost" onclick="saoChepLink('https://nangbammo-create.github.io/app-dieu-hanh-nang-ba-mmo/')">Sao chép</button></div>
 </div>
 
-<div class="footer">Bản v2 — dữ liệu minh họa theo pipeline thật của Nàng Ba MMO.<br>Chưa đồng bộ live Facebook / YouTube / Zalo. Giao việc chỉ hoàn tất khi chị dán lệnh vào chat với Mộc Miên và gửi.</div>
+<div id="caidat" class="panel">
+<h1>⚙️ Cài đặt &amp; giao diện</h1>
+<div class="card"><h2>Thông tin ê-kíp</h2><p class="muted">Tên ê-kíp: Nàng Ba MMO — Điều hành ê-kíp AI<br>Người quản lý: Chị Đại<br>Kênh: YouTube @nangbammo • Page Nàng Ba MMO • TikTok @nangbammo • Nhóm Zalo duy nhất “Hỗ trợ Ứng dụng AI - Tài khoản AI”</p></div>
+<div class="card"><h2>🎨 Giao diện mẫu</h2><p class="muted">Bấm một màu để đổi màu chủ đạo của app. Mặc định là Ngọc lục bảo, giống màu chị thích trong ảnh mẫu.</p>
+<div class="themes">
+<button class="theme" style="background:#0f766e" onclick="setTheme('#0f766e',this)" title="Ngọc lục bảo"></button>
+<button class="theme" style="background:#2563eb" onclick="setTheme('#2563eb',this)" title="Xanh dương"></button>
+<button class="theme" style="background:#7c3aed" onclick="setTheme('#7c3aed',this)" title="Tím"></button>
+<button class="theme" style="background:#db2777" onclick="setTheme('#db2777',this)" title="Hồng"></button>
+<button class="theme" style="background:#ea580c" onclick="setTheme('#ea580c',this)" title="Cam"></button>
+<button class="theme" style="background:#ca8a04" onclick="setTheme('#ca8a04',this)" title="Vàng"></button>
+<button class="theme" style="background:#0a8a5a" onclick="setTheme('#0a8a5a',this)" title="Xanh lá"></button>
+<button class="theme" style="background:#1f2937" onclick="setTheme('#1f2937',this)" title="Than chì"></button>
+</div>
+<p class="muted" style="margin-top:12px">Chế độ sáng / tối:</p>
+<button class="btn ghost" onclick="document.body.classList.remove('dark');toast('Đã chuyển sang chế độ sáng.')">Sáng</button>
+<button class="btn ghost" onclick="document.body.classList.add('dark');toast('Đã chuyển sang chế độ tối.')">Tối</button></div>
+<div class="card"><h2>⬇ Cài về màn hình điện thoại</h2><p class="muted">Bản này đã có manifest và icon để cài như app. Phải mở bằng <b>link https</b> trên trình duyệt thật, mở file đính kèm trong chat thì trình duyệt không cho cài.<br><br><b>Android (Chrome):</b> Mở link → dấu ⋮ → Thêm vào Màn hình chính → Thêm.<br><b>iPhone (Safari):</b> Mở link bằng Safari → nút Chia sẻ → Thêm vào Màn hình chính → Thêm.<br><b>Không mở trong Zalo:</b> bấm ⋯ → Mở bằng trình duyệt rồi mới cài.</p>
+<p>Link cài đặt:<br><a href="https://nangbammo-create.github.io/app-dieu-hanh-nang-ba-mmo/">https://nangbammo-create.github.io/app-dieu-hanh-nang-ba-mmo/</a></p>
+<button class="btn ghost" onclick="kiemTraCai()">Kiểm tra xem đã cài chưa</button><p class="muted" id="caiKq"></p>
+<p class="muted">Bản trên link công khai chỉ dùng dữ liệu minh họa, chưa đưa số thật nhạy cảm lên.</p></div>
+</div>
+
+</div>
+</main>
 </div>
 <div id="toast"></div>
 <script>
 let remaining=3;
-function showTab(id,el){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));if(el)el.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
-function toast(msg){let t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2600);}
-function approve(btn){if(btn.classList.contains('done'))return;btn.textContent='✓ Đã duyệt';btn.classList.add('done');remaining--;document.getElementById('taskCount').textContent=remaining;toast(remaining>0?'Còn '+remaining+' việc chờ chị duyệt.':'Xong! Hôm nay không còn việc gấp.');}
+function showTab(id,el){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));let t=document.getElementById(id);if(t)t.classList.add('active');document.querySelectorAll('.side-link').forEach(x=>x.classList.remove('active'));if(el)el.classList.add('active');document.getElementById('sidebar').classList.remove('open');window.scrollTo({top:0,behavior:'smooth'});}
+function toast(msg){let t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2800);}
+function approve(btn){if(btn.classList.contains('done'))return;btn.textContent='✓ Đã duyệt';btn.classList.add('done');remaining--;let a=document.getElementById('taskCount2');if(a)a.textContent=remaining;toast(remaining>0?'Còn '+remaining+' việc chờ chị duyệt.':'Xong! Hôm nay không còn việc gấp.');}
 function agentDetail(title,desc,el){document.querySelectorAll('.agent').forEach(a=>a.classList.remove('active'));el.classList.add('active');document.getElementById('agentBox').innerHTML='<h3>'+title+'</h3><p class="muted">'+desc+'</p>';}
 function soanLenh(){let n=document.getElementById('gvNguoi').value;let v=document.getElementById('gvViec').value.trim();let h=document.getElementById('gvHan').value;let g=document.getElementById('gvGhiChu').value.trim();if(!v){toast('Chị gõ việc cần làm đã nhé.');document.getElementById('gvViec').focus();return;}let lenh='Mộc Miên ơi, chị Đại giao việc nhé:\n- Giao cho: '+n+'\n- Việc: '+v+'\n- Hạn: '+h+(g?'\n- Ghi chú: '+g:'')+'\nNhờ em chia việc và báo lại cho chị khi xong nhé.';document.getElementById('gvLenh').value=lenh;try{let list=JSON.parse(localStorage.getItem('nb_gv')||'[]');list.unshift({n:n,v:v,h:h,t:new Date().toLocaleString('vi-VN')});localStorage.setItem('nb_gv',JSON.stringify(list.slice(0,10)));hienList();}catch(e){}toast('Đã soạn xong lệnh. Bấm Sao chép rồi dán vào chat với em nhé.');}
 function hienList(){try{let list=JSON.parse(localStorage.getItem('nb_gv')||'[]');if(!list.length)return;document.getElementById('gvList').innerHTML=list.map(x=>'<div class="row"><div><b>'+x.v+'</b><br><span class="muted">'+x.n+' • '+x.h+' • '+x.t+'</span></div><span class="badge wait">Chờ dán vào chat</span></div>').join('');}catch(e){}}
 function saoChep(){let t=document.getElementById('gvLenh');if(!t.value){toast('Chị bấm Soạn lệnh trước đã nhé.');return;}if(navigator.clipboard){navigator.clipboard.writeText(t.value).then(()=>toast('Đã sao chép. Chị mở chat với em Mộc Miên, dán và gửi nhé.')).catch(()=>{t.select();document.execCommand('copy');toast('Đã sao chép.');});}else{t.select();document.execCommand('copy');toast('Đã sao chép.');}}
-function kiemTraCai(){let standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;document.getElementById('caiKq').textContent=standalone?'App này đang chạy ở chế độ đã cài về màn hình.':'Chưa ở chế độ đã cài. Chị mở link https bằng Safari/Chrome rồi làm theo hướng dẫn ở trên nhé.';}
 function saoChepLink(url){if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>toast('Đã sao chép link.')).catch(()=>toast(url));}else{toast(url);}}
+function kiemTraCai(){let standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;document.getElementById('caiKq').textContent=standalone?'App này đang chạy ở chế độ đã cài về màn hình.':'Chưa ở chế độ đã cài. Chị mở link https bằng Safari/Chrome rồi làm theo hướng dẫn ở trên nhé.';}
+function setTheme(c,el){document.documentElement.style.setProperty('--accent',c);document.querySelectorAll('.theme').forEach(x=>x.classList.remove('active'));if(el)el.classList.add('active');toast('Đã đổi màu chủ đạo.');}
+function searchJump(){let q=(document.getElementById('searchBox').value||'').toLowerCase();let map=[['giao việc','giaoviec'],['kho','kho'],['lịch','lich'],['phễu','pheu'],['landing','landing'],['bộ não','bonao'],['cài','caidat'],['agent','sodo'],['sơ đồ','sodo']];for(let pair of map){if(q.includes(pair[0])){showTab(pair[1]);return;}}toast('Gõ: giao việc, kho, lịch, phễu, landing, bộ não, cài đặt hoặc agent để nhảy tới mục đó nhé.');}
 try{hienList();}catch(e){}
 if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}
 </script>
