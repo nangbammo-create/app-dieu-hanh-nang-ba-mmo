@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nàng Ba MMO — App Điều Hành Ê-kíp AI (Bản v2)</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2563eb">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nàng Ba MMO">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#e9eef7;color:#16233a}
+.app{max-width:540px;margin:0 auto;background:#f6f8fc;min-height:100vh;padding-bottom:90px;border-left:5px solid transparent;border-right:5px solid transparent;border-image:linear-gradient(90deg,#2563eb,#fff) 1}
+.topbar{background:#0a8a5a;color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:700}
+.topbar span:last-child{background:#fff;color:#0a8a5a;padding:5px 10px;border-radius:20px;font-size:13px}
+.header{padding:16px;background:linear-gradient(135deg,#2563eb,#06b6d4);color:#fff}
+.header h1{margin:0;font-size:24px} .header h1 i{font-style:normal;background:linear-gradient(90deg,#fff,#fde68a,#fb923c);-webkit-background-clip:text;background-clip:text;color:transparent}
+.header p{margin:6px 0 0;opacity:.95;font-size:14px}
+.pills{display:flex;gap:8px;flex-wrap:wrap;padding:12px 14px}
+.pill{border:1px solid #dbe4f2;background:#fff;padding:7px 11px;border-radius:20px;font-size:13px;cursor:pointer}
+.pill.hot{background:#ffedd5;border-color:#fdba74;font-weight:700}
+.tabs{display:flex;gap:6px;padding:0 14px;overflow-x:auto}
+.tab{white-space:nowrap;border:0;background:#e2e8f0;padding:9px 13px;border-radius:12px 12px 0 0;font-weight:700;cursor:pointer}
+.tab.active{background:#fff;color:#1d4ed8;box-shadow:0 -2px 8px rgba(0,0,0,.06)}
+.panel{display:none;padding:14px} .panel.active{display:block}
+.card{background:#fff;border-radius:18px;padding:15px;margin-bottom:12px;box-shadow:0 4px 18px rgba(15,40,90,.07)}
+.card h2{margin:0 0 6px;font-size:17px} .card h3{margin:0 0 6px;font-size:15px} .muted{color:#64748b;font-size:13px;line-height:1.5}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:#fff;border-radius:16px;padding:13px;box-shadow:0 3px 12px rgba(0,0,0,.05)} .stat b{font-size:24px;color:#1d4ed8} .stat span{display:block;color:#64748b;font-size:12px;margin-top:2px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px dashed #e2e8f0}
+.row:first-of-type{border-top:0} .badge{font-size:12px;font-weight:700;padding:4px 9px;border-radius:20px;white-space:nowrap}
+.ok{background:#dcfce7;color:#166534} .wait{background:#fef3c7;color:#92400e} .run{background:#dbeafe;color:#1e40af}
+.btn{border:0;border-radius:12px;padding:9px 14px;font-weight:800;cursor:pointer;background:#1d4ed8;color:#fff}
+.btn.ghost{background:#eef2ff;color:#1d4ed8} .btn.done{background:#e2e8f0;color:#64748b}
+.agent{border:2px solid #dbeafe;border-radius:16px;padding:12px;margin-bottom:10px;cursor:pointer;background:#fff}
+.agent.active{border-color:#2563eb;box-shadow:0 0 0 3px #dbeafe}
+.agent b{font-size:15px} .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#22c55e;margin-right:6px}
+.funnel div{border-radius:14px;padding:12px;margin-bottom:8px;color:#fff;font-weight:700;text-align:center}
+.funnel div:nth-child(1){background:#2563eb}.funnel div:nth-child(2){background:#0891b2}.funnel div:nth-child(3){background:#0a8a5a}.funnel div:nth-child(4){background:#7c3aed}.funnel div:nth-child(5){background:#ea580c}
+.funnel small{display:block;font-weight:400;opacity:.9;margin-top:3px}
+.kho{display:grid;grid-template-columns:1fr 1fr;gap:10px} .kho div{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:11px} .kho b{display:block}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;background:#16233a;color:#fff;padding:11px 16px;border-radius:20px;font-size:14px;display:none;z-index:99;max-width:90%;text-align:center}
+.footer{padding:14px;text-align:center;color:#64748b;font-size:12px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="topbar"><span>✓ Không có việc gấp, đội agent đang tự chạy</span><span>SOS (0)</span></div>
+<div class="header"><h1>🌺 <i>NÀNG BA MMO</i></h1><p>App điều hành ê-kíp AI — Chị Đại chỉ cần mở ra là thấy hết.<br><b>Bản v2</b> • Cài được về điện thoại • Giao việc qua chat.</p></div>
+<div class="pills">
+<button class="pill hot" onclick="showTab('tongquan')">📌 Việc cần làm (<span id="taskCount">3</span>)</button>
+<button class="pill hot" onclick="showTab('giaoviec')">📣 Giao việc cho tụi em</button>
+<button class="pill" onclick="showTab('caidat')">⬇ Cài về màn hình</button>
+<button class="pill" onclick="toast('Bản v2: mục này ở v3 sẽ nối số lượt dùng thật.')">Tiết kiệm lượt dùng</button>
+<button class="pill" onclick="showTab('bonao')">🧠 Bộ não</button>
+<button class="pill" onclick="toast('Bản mẫu v1: Inbox/comment sẽ gom về đây ở v2, kèm nút dẫn về Zalo.')">Inbox</button>
+</div>
+<div class="tabs">
+<button class="tab active" onclick="showTab('tongquan',this)">Tổng quan</button>
+<button class="tab" onclick="showTab('sodo',this)">Sơ đồ chỉ huy</button>
+<button class="tab" onclick="showTab('kho',this)">Kho</button>
+<button class="tab" onclick="showTab('lich',this)">Lịch đăng</button>
+<button class="tab" onclick="showTab('pheu',this)">Phễu doanh thu</button>
+<button class="tab" onclick="showTab('bonao',this)">Bộ não</button>
+<button class="tab" onclick="showTab('giaoviec',this)">Giao việc</button>
+<button class="tab" onclick="showTab('caidat',this)">Cài đặt</button>
+</div>
+
+<div id="tongquan" class="panel active">
+<div class="card"><h2>Vòng hệ sinh thái Nàng Ba MMO</h2><p class="muted">Các agent và kênh trong một vòng: nội dung → kênh → nhóm Zalo → trial → membership. Không bán ở đầu phễu, chỉ bán sau khi đã cho giá trị.</p></div>
+<div class="stats">
+<div class="stat"><b>6</b><span>video / ngày, làm gối đầu<br>không chờ gói sáng</span></div>
+<div class="stat"><b>9</b><span>lượt đăng / ngày<br>3 video × 3 kênh</span></div>
+<div class="stat"><b>1</b><span>nhóm Zalo duy nhất<br>Hỗ trợ Ứng dụng AI - Tài khoản AI</span></div>
+<div class="stat"><b>3</b><span>ca đăng: 8h00 • 11h30 • 19h30</span></div>
+</div>
+<div class="card"><h2>📌 Việc cần chị Đại duyệt</h2>
+<div class="row"><div><b>Duyệt gói đăng sáng nay</b><br><span class="muted">Video + caption + thumbnail, đủ 3 kênh</span></div><button class="btn" onclick="approve(this)">Duyệt</button></div>
+<div class="row"><div><b>Bấm thẻ phê duyệt Facebook</b><br><span class="muted">Thẻ này chỉ chị bấm được, agent không bấm thay</span></div><button class="btn" onclick="approve(this)">Đã bấm</button></div>
+<div class="row"><div><b>Chốt video Tiểu Kỳ Bài 2</b><br><span class="muted">Duyệt 1 lần rồi chạy hàng loạt</span></div><button class="btn" onclick="approve(this)">Duyệt</button></div>
+<p class="muted">Bấm Duyệt ở bản mẫu chỉ đổi số trong trang này, chưa đăng thật.</p></div>
+<div class="card"><h2>📣 Bài đã đăng • hôm nay</h2>
+<div class="row"><span>Ca 8h00 — Facebook + TikTok + YouTube</span><span class="badge ok">Đã lên lịch</span></div>
+<div class="row"><span>Ca 11h30 — đang chờ gói video</span><span class="badge wait">Chờ video</span></div>
+<div class="row"><span>Ca 19h30 — lên lịch trước 1 ngày (Meta Suite)</span><span class="badge run">Đã cài lịch</span></div>
+<p class="muted">Comment đăng sau khi bài lên sóng, dưới danh tính Trang Nàng Ba MMO. Ca nào kẹt quá 10 phút phải báo ngay.</p></div>
+</div>
+
+<div id="sodo" class="panel">
+<div class="card"><h2>Sơ đồ chỉ huy — hôm nay</h2><p class="muted">Bấm vào từng người để xem việc đang làm. Người ở trên ra lệnh, người ở dưới làm và báo về.</p></div>
+<div class="agent active" onclick="agentDetail('Mộc Miên — Tổng quản','Gom báo cáo 3 kênh, QC thành phẩm, báo cáo hợp nhất cho chị Đại sau mỗi ca 30 phút. Kẹt là báo ngay, không im lặng.',this)"><span class="dot"></span><b>Mộc Miên — Tổng quản</b><br><span class="muted">Ra lệnh • Duyệt nội dung • QC • Báo cáo</span></div>
+<div class="agent" onclick="agentDetail('Nàng Mộc — Media','Làm 6 video/ngày gối đầu: ảnh Ba → clip làm việc → video THCN khung V5, không nhạc sẵn. Giao gói đăng sẵn trước 7h00.',this)"><span class="dot"></span><b>Nàng Mộc — Media</b><br><span class="muted">Ảnh • Clip • Video THCN • Gói đăng sẵn</span></div>
+<div class="agent" onclick="agentDetail('Á Hiên FB — Facebook','Đăng Page Nàng Ba MMO, chèn nhạc Power Trip, ảnh bìa đủ tiêu đề, 6 comment dưới danh tính Trang.',this)"><span class="dot"></span><b>Á Hiên FB — Facebook</b><br><span class="muted">Page • Reel • Comment • Lên lịch trước 1 ngày</span></div>
+<div class="agent" onclick="agentDetail('Á Hiên TikTok — TikTok','Đăng @nangbammo, kéo người lạ, chèn nhạc năng lượng không lời trong app.',this)"><span class="dot"></span><b>Á Hiên TikTok — TikTok</b><br><span class="muted">@nangbammo • Viral • Dẫn về Zalo</span></div>
+<div class="agent" onclick="agentDetail('Á Hiên YTB — YouTube','Đăng @nangbammo, SEO đầy đủ, giữ chân bằng tutorial dài, không đăng trùng video kênh đã có.',this)"><span class="dot"></span><b>Á Hiên YTB — YouTube</b><br><span class="muted">@nangbammo • SEO • Video dài + Shorts</span></div>
+<div class="agent" onclick="agentDetail('Tiểu Kỳ — Video Agent','Dựng video Agent/Sub Agent tự động từ cuộc trò chuyện của Ba, bắt buộc chèn thành phẩm thật, chữ chạy đúng lúc lời thoại.',this)"><span class="dot"></span><b>Tiểu Kỳ — Video Agent</b><br><span class="muted">Series Agent • Thành phẩm thật • Không chân chữ</span></div>
+<div class="card" id="agentBox"><h3>Mộc Miên — Tổng quản</h3><p class="muted">Gom báo cáo 3 kênh, QC thành phẩm, báo cáo hợp nhất cho chị Đại sau mỗi ca 30 phút. Kẹt là báo ngay, không im lặng.</p></div>
+</div>
+
+<div id="kho" class="panel">
+<div class="card"><h2>Kho của chị Đại</h2><p class="muted">Mọi nguyên liệu nằm một chỗ, không phải đi tìm trong từng chat, từng Drive.</p></div>
+<div class="kho">
+<div><b>🖼️ Kho bối cảnh</b><span class="muted">34 cảnh làm việc chân thực</span></div>
+<div><b>👩 Kho ảnh Ba</b><span class="muted">Mặt gốc 100% • Thả tóc • ASUS bạc</span></div>
+<div><b>🎬 Video thô</b><span class="muted">Chờ edit, chờ Nàng Mộc</span></div>
+<div><b>✂️ Video đã edit</b><span class="muted">Khung V5 • Không nhạc sẵn</span></div>
+<div><b>✅ Video thành phẩm</b><span class="muted">Chỉ lấy bản không nhạc khi đăng</span></div>
+<div><b>📝 Kịch bản quay</b><span class="muted">Kịch bản THCN • Series Agent</span></div>
+<div><b>🖼️ Thumbnail v8</b><span class="muted">Ảnh gốc bên phải • Đủ tiêu đề</span></div>
+<div><b>🧩 Kho skill</b><span class="muted">Skill/app dùng lại được</span></div>
+</div>
+<div class="card"><p class="muted">Bản mẫu v1 liệt kê kho. Ở v2, mỗi ô sẽ mở đúng folder Drive tương ứng của chị.</p><button class="btn ghost" onclick="toast('Bản mẫu v1: v2 sẽ gắn link Drive thật vào từng ô kho.')">Xem ghi chú v2</button></div>
+</div>
+
+<div id="lich" class="panel">
+<div class="card"><h2>Lịch đăng chuẩn</h2>
+<div class="row"><span><b>8h00</b> — Ca sáng</span><span class="badge ok">Đã lên lịch</span></div>
+<div class="row"><span><b>11h30</b> — Ca trưa</span><span class="badge wait">Chờ video</span></div>
+<div class="row"><span><b>19h30</b> — Ca tối</span><span class="badge run">Đã cài lịch mai</span></div>
+<p class="muted">Á Hiên FB lên lịch trước 1 ngày trên Meta Business Suite. Lịch đăng tay 07:55 / 11:25 / 19:25 chỉ giữ làm dự phòng — LƯU Ý: chống trùng hiện chỉ phát hiện bài ĐÃ ĐĂNG, không thấy bài ĐÃ LÊN LỊCH trên Suite, nên trước khi đăng tay phải kiểm tra lịch Suite trước để tránh đăng trùng. Chờ chị chốt tắt hẳn hay giữ kèm bước kiểm tra này.</p></div>
+<div class="card"><h3>Quy tắc chống im lặng</h3><p class="muted">Ca nào quá 1 tiếng sau mốc đăng mà chưa có báo cáo thì coi là kẹt — kiểm tra Page trực tiếp và xử lý, không chờ tới timeout.</p></div>
+</div>
+
+<div id="pheu" class="panel">
+<div class="card"><h2>Phễu doanh thu — vòng quay khép kín</h2><p class="muted">Content kéo người mới → trial → xài app → mua tài khoản → ở lại member → khoe kết quả → thành content mới.</p></div>
+<div class="funnel">
+<div>1. Video miễn phí<small>Cho giá trị thật, không bán trên video</small></div>
+<div>2. Nhóm Zalo duy nhất<small>Hỗ trợ Ứng dụng AI - Tài khoản AI</small></div>
+<div>3. Gói trải nghiệm 55.000đ<small>Dùng full app 30 ngày + nhóm member</small></div>
+<div>4. Membership 99k/tháng<small>249k/3 tháng • 799k/năm • Kho app + app mới mỗi tháng</small></div>
+<div>5. Tài khoản AI + Affiliate<small>ChatGPT • Gemini • Hoa hồng partner</small></div>
+</div>
+<div class="card"><p class="muted">Mục tiêu lõi: membership làm lõi doanh thu, đo bằng người vào nhóm và người mua, không đo bằng view.</p></div>
+</div>
+
+<div id="bonao" class="panel">
+<div class="card"><h2>🧠 Bộ não — quy chuẩn đã khóa</h2>
+<p class="muted">• Mặt Ba giữ 100% nguyên gốc, edit trên ảnh gốc, không regenerate lại mặt.<br>• Phong cách street life cá tính, trang phục luân phiên, không đồ công sở, không sơ vin, không váy bánh bèo.<br>• Giày cao gót bít mũi bít gót hoặc boot. Laptop ASUS màu bạc.<br>• Video THCN khung V5: khung mờ 448px, y 712–1160, đáy cách đáy khung hình 120px.<br>• Thành phẩm không nhạc sẵn. Facebook Reel chèn Power Trip của Adam Griffith. Tắt phụ đề nền tảng.<br>• Ảnh bìa Reel phải đủ tiêu đề, lấy frame lúc chữ đã gõ xong (khoảng giây 8.5).<br>• Tiểu Kỳ: bắt buộc chèn thành phẩm thật, chữ chạy đúng lúc lời thoại, cấm chân chữ và câu “xem tiếp”.</p></div>
+</div>
+
+<div id="giaoviec" class="panel">
+<div class="card"><h2>📣 Giao việc cho tụi em</h2><p class="muted">Chị chọn người, gõ việc, app soạn sẵn lệnh đúng mẫu. Sau đó chị sao chép, mở chat với em Mộc Miên, dán và gửi — lúc đó em mới nhận được và chia việc cho người đó.</p>
+<label class="muted">Giao cho ai?</label>
+<select id="gvNguoi" style="width:100%;padding:11px;border-radius:12px;border:1px solid #dbe4f2;margin:6px 0 10px;font-size:15px">
+<option>Mộc Miên — Tổng quản (em sẽ chia việc tiếp)</option>
+<option>Nàng Mộc — Media (ảnh, clip, video THCN)</option>
+<option>Á Hiên FB — Facebook</option>
+<option>Á Hiên TikTok — TikTok</option>
+<option>Á Hiên YTB — YouTube</option>
+<option>Tiểu Kỳ — Video Agent</option>
+</select>
+<label class="muted">Việc cần làm là gì?</label>
+<input id="gvViec" placeholder="Ví dụ: Làm 6 video gối đầu cho ngày mai" style="width:100%;padding:11px;border-radius:12px;border:1px solid #dbe4f2;margin:6px 0 10px;font-size:15px">
+<label class="muted">Hạn / ca nào?</label>
+<select id="gvHan" style="width:100%;padding:11px;border-radius:12px;border:1px solid #dbe4f2;margin:6px 0 10px;font-size:15px">
+<option>Hôm nay, trước 19h30</option><option>Ngày mai, trước 7h00</option><option>Ca 8h00</option><option>Ca 11h30</option><option>Ca 19h30</option><option>Không gấp, làm trong tuần này</option>
+</select>
+<label class="muted">Ghi chú thêm (không bắt buộc)</label>
+<textarea id="gvGhiChu" rows="2" placeholder="Ví dụ: Nhớ lấy bản không nhạc, thumbnail đủ tiêu đề" style="width:100%;padding:11px;border-radius:12px;border:1px solid #dbe4f2;margin:6px 0 10px;font-size:15px"></textarea>
+<button class="btn" onclick="soanLenh()">Soạn lệnh</button>
+<button class="btn ghost" onclick="saoChep()">Sao chép lệnh</button>
+</div>
+<div class="card"><h3>Lệnh sẽ gửi qua chat</h3><textarea id="gvLenh" rows="5" readonly placeholder="Bấm Soạn lệnh, lệnh sẽ hiện ở đây." style="width:100%;padding:11px;border-radius:12px;border:1px solid #dbe4f2;font-size:14px"></textarea>
+<p class="muted">Bước cuối quan trọng: sau khi sao chép, chị mở chat với em Mộc Miên, dán lệnh và bấm gửi. Chưa gửi qua chat thì tụi em chưa thấy việc này đâu ạ.</p></div>
+<div class="card"><h3>Việc chị vừa soạn (chỉ lưu trên máy này)</h3><div id="gvList"><p class="muted">Chưa có việc nào. Việc ở đây chưa gửi cho tụi em cho tới khi chị dán vào chat và gửi.</p></div></div>
+</div>
+
+<div id="caidat" class="panel">
+<div class="card"><h2>⬇ Cài về màn hình điện thoại</h2><p class="muted">Bản v2 đã có manifest và icon để cài như app. Lưu ý: phải mở bằng <b>link https</b> trên trình duyệt thật, mở file đính kèm trong chat thì trình duyệt không cho cài.</p>
+<p><b>Android (Chrome):</b> Mở link → dấu ⋮ → Thêm vào Màn hình chính → Thêm.<br><br><b>iPhone (Safari):</b> Mở link bằng Safari → nút Chia sẻ → Thêm vào Màn hình chính → Thêm.<br><br><b>Không mở trong Zalo:</b> Zalo chặn nhiều tính năng, chị bấm ⋯ → Mở bằng trình duyệt rồi mới cài.</p>
+<button class="btn ghost" onclick="kiemTraCai()">Kiểm tra xem đã cài chưa</button>
+<p class="muted" id="caiKq"></p></div>
+<div class="card"><h3>Link cài đặt</h3><p class="muted" id="linkCai">Em sẽ cập nhật link GitHub Pages ngay dưới đây sau khi đẩy bản v2 lên. Bản trên link công khai chỉ dùng dữ liệu minh họa, chưa đưa số thật nhạy cảm lên.</p></div>
+</div>
+
+<div class="footer">Bản v2 — dữ liệu minh họa theo pipeline thật của Nàng Ba MMO.<br>Chưa đồng bộ live Facebook / YouTube / Zalo. Giao việc chỉ hoàn tất khi chị dán lệnh vào chat với Mộc Miên và gửi.</div>
+</div>
+<div id="toast"></div>
+<script>
+let remaining=3;
+function showTab(id,el){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));if(el)el.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+function toast(msg){let t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2600);}
+function approve(btn){if(btn.classList.contains('done'))return;btn.textContent='✓ Đã duyệt';btn.classList.add('done');remaining--;document.getElementById('taskCount').textContent=remaining;toast(remaining>0?'Còn '+remaining+' việc chờ chị duyệt.':'Xong! Hôm nay không còn việc gấp.');}
+function agentDetail(title,desc,el){document.querySelectorAll('.agent').forEach(a=>a.classList.remove('active'));el.classList.add('active');document.getElementById('agentBox').innerHTML='<h3>'+title+'</h3><p class="muted">'+desc+'</p>';}
+function soanLenh(){let n=document.getElementById('gvNguoi').value;let v=document.getElementById('gvViec').value.trim();let h=document.getElementById('gvHan').value;let g=document.getElementById('gvGhiChu').value.trim();if(!v){toast('Chị gõ việc cần làm đã nhé.');document.getElementById('gvViec').focus();return;}let lenh='Mộc Miên ơi, chị Đại giao việc nhé:\n- Giao cho: '+n+'\n- Việc: '+v+'\n- Hạn: '+h+(g?'\n- Ghi chú: '+g:'')+'\nNhờ em chia việc và báo lại cho chị khi xong nhé.';document.getElementById('gvLenh').value=lenh;try{let list=JSON.parse(localStorage.getItem('nb_gv')||'[]');list.unshift({n:n,v:v,h:h,t:new Date().toLocaleString('vi-VN')});localStorage.setItem('nb_gv',JSON.stringify(list.slice(0,10)));hienList();}catch(e){}toast('Đã soạn xong lệnh. Bấm Sao chép rồi dán vào chat với em nhé.');}
+function hienList(){try{let list=JSON.parse(localStorage.getItem('nb_gv')||'[]');if(!list.length)return;document.getElementById('gvList').innerHTML=list.map(x=>'<div class="row"><div><b>'+x.v+'</b><br><span class="muted">'+x.n+' • '+x.h+' • '+x.t+'</span></div><span class="badge wait">Chờ dán vào chat</span></div>').join('');}catch(e){}}
+function saoChep(){let t=document.getElementById('gvLenh');if(!t.value){toast('Chị bấm Soạn lệnh trước đã nhé.');return;}if(navigator.clipboard){navigator.clipboard.writeText(t.value).then(()=>toast('Đã sao chép. Chị mở chat với em Mộc Miên, dán và gửi nhé.')).catch(()=>{t.select();document.execCommand('copy');toast('Đã sao chép.');});}else{t.select();document.execCommand('copy');toast('Đã sao chép.');}}
+function kiemTraCai(){let standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;document.getElementById('caiKq').textContent=standalone?'App này đang chạy ở chế độ đã cài về màn hình.':'Chưa ở chế độ đã cài. Chị mở link https bằng Safari/Chrome rồi làm theo hướng dẫn ở trên nhé.';}
+try{hienList();}catch(e){}
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}
+</script>
+</body>
+</html>
